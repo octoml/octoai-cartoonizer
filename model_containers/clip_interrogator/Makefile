@@ -1,5 +1,3 @@
-# clownfish: no-ci. Slowly adding models to CI.
-
 IMAGE_TAG ?= clip-interrogator
 CONTAINER_NAME ?= ${IMAGE_TAG:%:latest=%}
 INFERENCE_SERVER_PORT ?= 8000
