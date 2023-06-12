@@ -1,78 +1,78 @@
-# OctoAI: Cartoonizer Tutorial
+# OctoAI: Cartoonizer Tutorial :camera::star2::octopus:
 
 In this guide you'll learn how to build, deploy and share your own interactive and engaging image-to-image Generative AI web-application using OctoAI!
 
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmoreau89-cartoonize-cartoonizer-gwpv6p.streamlit.app/)
 
-## Requirements
+## Requirements :clipboard:
 
 Let's take a look at the requirements in terms of skill set, hardware and software for each phase of this tutorial.
 
 In total this tutorial takes 1-2 hours depending on how much programming experience you have and how much you want to experiment with stable diffusion functionality. Note that we've designed this tutorial to be as approachable as possible. Very minimal programming experience is required here to be successful.
 
-### Phase 1: Experiment with Image to Image feature in Stable Diffusion Web UI
+### Phase 1: Experiment with Image to Image feature in Stable Diffusion Web UI :woman::arrow_right::princess:
 
-#### Time
+#### Time :clock1:
 * 30-60mins depending on how much you want to experiment with Stable Diffusion.
 
-#### Skillset
+#### Skillset :hatching_chick:
 * Git, and beginer-level command line programming.
 
-#### Hardware
+#### Hardware :computer:
 * A computer of instance with a beefy GPU (Nvidia A10 or better).
 
-#### Software
+#### Software :floppy_disk:
 * [AUTOMATIC1111 stable diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) which is under AGPL-3.0 license.
 * A model checkpoint of your choice from [CivitAI's website](https://civitai.com/).
 * An image of your choice.
 
 
-### Phase 2: Build your own CLIP-Interrogator Docker container
+### Phase 2: Build your own CLIP-Interrogator Docker container :package:
 
-#### Time
+#### Time :clock1230:
 * 15-30 mins.
 
-#### Skillset
+#### Skillset :hatching_chick:
 * Git and beginner-level command line and Python programming.
 
-#### Hardware
+#### Hardware :computer:
 * A computer of instance with a decent GPU (Nvidia T4 or better).
 
-#### Software
+#### Software :floppy_disk:
 * [Docker Engine](https://docs.docker.com/engine/) and a [Docker Hub](https://hub.docker.com/) account.
 * [pharmapscychotic clip interrogator library](https://github.com/pharmapsychotic/clip-interrogator) which available under MIT license.
 * The ["Build a Container from Python" guide](https://docs.octoai.cloud/docs/create-custom-endpoints-from-python-code) from OctoAI's website.
 
-### Phase 3: Deploy your inference REST endpoint
+### Phase 3: Deploy your inference REST endpoint :octopus:
 
-#### Time
+#### Time :clock1230:
 * 5-15 mins.
 
-#### Skillset
+#### Skillset :hatching_chick:
 * No experience needed to launch the OctoAI endpoint. Beginner-level command line programming for testing.
 
-#### Hardware
+#### Hardware :computer:
 * Your laptop.
 
-#### Software
+#### Software :floppy_disk:
 * [OctoAI's compute service](https://docs.octoai.cloud/docs) with a user account.
 * The CLIP-Interrogator model container built in Phase 2 and uploaded on [Docker Hub](https://hub.docker.com/).
 * A Stable Diffusion model container that we built for you.
 * A test script to exercise your newly-launched OctoAI endpoint.s
 
-### Phase 4: Build your own Streamlit Web Frontend
+### Phase 4: Build your own Streamlit Web Frontend :technologist:
 
-#### Time
+#### Time :clock1230:
 * 15-30 mins.
 
-#### Skillset
+#### Skillset :hatching_chick:
 * No web-design experience needed! Beginner-level Python programming.
 
-#### Hardware
+#### Hardware :computer:
 * Your laptop for developing your webapp, a laptop or phone/tablet to test the webapp.
 
-#### Software
+#### Software :floppy_disk:
 * [Streamlit](https://streamlit.io/) library that you can pip-install.
 * The OctoAI inference endpoint URLs that you launched in Phase 3.
 
@@ -80,13 +80,13 @@ In total this tutorial takes 1-2 hours depending on how much programming experie
 
 Under construction.
 
-## Step-by-step Cartoonizer Tutorial
+## Step-by-step Cartoonizer Tutorial :books:
 
-### Phase 1: Experiment with Image to Image feature in Stable Diffusion Web UI
+### Phase 1: Experiment with Image to Image feature in Stable Diffusion Web UI :woman::arrow_right::princess:
 
 Under construction.
 
-### Phase 2: Build your own CLIP-Interrogator Docker container
+### Phase 2: Build your own CLIP-Interrogator Docker container :package:
 
 Let's walk through how you can build your own model container and upload it on DockerHub. Once uploaded you can use OctoAI's compute service to serve the model container behind an easy to use REST endpoint. This makes your model easy to access, manage and scale based on your use requirements.
 
@@ -404,7 +404,7 @@ Once the upload has completed, go on your docker hub landing page to see if the 
 
 Success! We're now ready to launch our nifty CLIP-Interrogator inference endpoint.
 
-### Phase 3: Deploy your inference REST endpoints
+### Phase 3: Deploy your inference REST endpoints :octopus:
 
 In this part of the tutorial we're going to deploy two OctoAI compute service inference endpoints.
 
@@ -418,14 +418,14 @@ Time to launch our endpoint. If you want to have a detailed guide on how to do t
 
 So let's click on `Endpoints` at the top left of the OctoAI landing page. Next, click on `New endpoint` to create your very first endpoint!
 * Under `Endpoint name`, enter "clip-interrogator"
-* Under `Container Image`, enter the tag you used to upload your model to dockerhub. You can always use the one we build for the tutorial, under ["tmoreau89octo/cartoonizer-clip-interrogator:v0.1.0"](https://hub.docker.com/layers/tmoreau89octo/cartoonizer-clip-interrogator/v0.1.0/images/sha256-f9b5e650856d1020013fcebae02d65dfba4bb2825d5507d37d85e7ccd3f5dc35?context=repo).
+* Under `Container Image`, enter the tag you used to upload your model to dockerhub. You can always use the one we build for the tutorial: ["tmoreau89octo/cartoonizer-clip-interrogator:v0.1.0"](https://hub.docker.com/layers/tmoreau89octo/cartoonizer-clip-interrogator/v0.1.0/images/sha256-f9b5e650856d1020013fcebae02d65dfba4bb2825d5507d37d85e7ccd3f5dc35?context=repo).
 * Under `Container Port`, we're going to use port "8000".
 * Keep the `Registry Credential` unchanged ("Public").
 * Keep the `Health check path` unchanged ("/healthcheck").
 * Turn on the `Enable public access` toggle switch.
 * No need to specify secrets.
-* Under `Select Hardware` click on the `Small 16GB` instance that is equipped with an T4 GPU.
-* Set `Min Replicas` to 1, and `Max Replicas` to 1 for this experiment.
+* Under `Select Hardware` click on the "Small 16GB: instance that is equipped with an T4 GPU.
+* Set `Min Replicas` to "1", and `Max Replicas` to "1" for this experiment.
 * Leave the timeout as is.
 
 ![octoai](assets/octoai.png)
@@ -465,7 +465,7 @@ Yes, we have our AI endpoints up! Time to build our web app! No web design exper
 
 We're going to build our web app in two stages. First we're going to test an interactive CLIP-Interrogator web app that lets us upload an image and see how the AI labels it. Second, we'll build our Cartoonizer web app that will turn images that you upload into a cartoon version of yourself.
 
-#### A. A simple interactive CLIP-Interrogator frontend
+#### A. A simple interactive CLIP-Interrogator frontend :technologist:
 
 You can get all of the code you need to have that fronend up and running under [websites/clip_interrogator/](websites/clip_interrogator/). But to build it from scratch, follow the instructions below:
 
