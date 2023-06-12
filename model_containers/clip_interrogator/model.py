@@ -1,16 +1,14 @@
 """Model wrapper for serving clip_vit_l_14."""
 
 import argparse
+import typing
 
-import json
+import torch
 from base64 import b64decode
 from io import BytesIO
-from typing import Any, Dict
-
 from PIL import Image
 from clip_interrogator import Config, Interrogator
 
-import torch
 
 
 class Model:
@@ -23,7 +21,7 @@ class Model:
                 clip_model_path='cache',
                 device="cuda:0" if torch.cuda.is_available() else "cpu"))
 
-    def predict(self, inputs: Dict[str, Any]) -> Dict[str, str]:
+    def predict(self, inputs: typing.Dict[str, typing.Any]) -> typing.Dict[str, str]:
         """Return interrogation for the given image.
 
         :param inputs: dict of inputs containing model inputs
@@ -44,6 +42,8 @@ class Model:
             outputs = self._clip_interrogator.interrogate_fast(image_dat)
         elif mode == "classic":
             outputs = self._clip_interrogator.interrogate_classic(image_dat)
+        elif mode == "negative":
+            outputs = self._clip_interrogator.interrogate_negative(image_dat)
         else:
             outputs = self._clip_interrogator.interrogate(image_dat)
 

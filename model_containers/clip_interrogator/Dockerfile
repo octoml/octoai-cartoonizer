@@ -6,7 +6,7 @@ ENV SERVING_PORT=$SERVING_PORT
 WORKDIR /app
 
 RUN apt update && \
-    apt install -y python3-pip git vim
+    apt install -y python3-pip
 
 # Upgrade pip and install the copied in requirements.
 RUN pip install --no-cache-dir --upgrade pip
