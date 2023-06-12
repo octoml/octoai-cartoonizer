@@ -71,9 +71,6 @@ def cartoonize_image(upload, strength, seed):
     # Retrieve prompt
     clip_reply = reply.json()["completion"]["labels"]
 
-    # Editable CLIP interrogator output
-    # prompt = st.text_area("AI-generated, human editable label:", value=clip_reply)
-
     # Prepare SD request for img2img
     sd_request = {
         "image": image_out_b64.decode("utf8"),
