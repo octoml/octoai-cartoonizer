@@ -5,6 +5,10 @@ from base64 import b64decode, b64encode
 import requests
 import random
 
+
+CLIP_ENDPOINT = "https://clip-interrogator-4jkxk521l3v1.octoai.cloud"
+SD_ENDPOINT = "https://stable-diffusion-4jkxk521l3v1.octoai.cloud"
+
 # PIL helper
 def crop_center(pil_img, crop_width, crop_height):
     img_width, img_height = pil_img.size
@@ -41,7 +45,6 @@ def cartoonize_image(upload, strength, seed):
     except:
         # Do nothing
         print("No rotation to perform based on Exif data")
-
     # Apply cropping and resizing to work on a square image
     cropped_img = crop_max_square(input_img)
     resized_img = cropped_img.resize((512, 512))
@@ -53,9 +56,28 @@ def cartoonize_image(upload, strength, seed):
     resized_img.save(buffer, format="png")
     image_out_bytes = buffer.getvalue()
     image_out_b64 = b64encode(image_out_bytes)
-    model_request = {
+
+    # Prepare CLIP request
+    clip_request = {
+        "mode": "fast",
         "image": image_out_b64.decode("utf8"),
-        "prompt": "masterpiece, best quality",
+    }
+    # Send to CLIP endpoint
+    reply = requests.post(
+        "{}/predict".format(CLIP_ENDPOINT),
+        headers={"Content-Type": "application/json"},
+        json=clip_request
+    )
+    # Retrieve prompt
+    clip_reply = reply.json()["completion"]["labels"]
+
+    # Editable CLIP interrogator output
+    # prompt = st.text_area("AI-generated, human editable label:", value=clip_reply)
+
+    # Prepare SD request for img2img
+    sd_request = {
+        "image": image_out_b64.decode("utf8"),
+        "prompt": clip_reply,
         "negative_prompt": "EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry, nsfw",
         "model": "DisneyPixarCartoon_v10",
         "vae": "YOZORA.vae.pt",
@@ -69,15 +91,15 @@ def cartoonize_image(upload, strength, seed):
         "steps": 20
     }
     reply = requests.post(
-        f"https://cartoonizer-v2-4jkxk521l3v1.octoai.cloud/predict",
+        "{}/predict".format(SD_ENDPOINT),
         headers={"Content-Type": "application/json"},
-        json=model_request
+        json=sd_request
     )
 
     img_bytes = b64decode(reply.json()["completion"]["image_0"])
     cartoonized = Image.open(BytesIO(img_bytes), formats=("png",))
 
-    col2.write("Transformed Image :magic_wand:")
+    col2.write("Transformed Image :star2:")
     col2.image(cartoonized)
     st.markdown("\n")
     st.download_button("Download transformed image", convert_image(cartoonized), "cartoonized.png", "cartoonized/png")
@@ -86,7 +108,7 @@ st.set_page_config(layout="wide", page_title="Cartoonizer")
 
 st.write("## Cartoonizer - Powered by OctoAI")
 st.markdown(
-    "Upload a photo and turn yourself into a CGI character! Full quality images can be downloaded at the bottom of the page."
+    "Upload a photo and turn yourself into a CGI character! Try OctoML's new compute service for free by signing up for early access: https://octoml.ai/"
 )
 
 st.markdown(
@@ -99,7 +121,6 @@ st.markdown(
     " * :woman-getting-haircut: Tip #3: for best results, avoid cropping heads/faces."
 )
 
-# st.write("## Upload and download :gear:")
 my_upload = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
 col1, col2 = st.columns(2)
@@ -112,7 +133,8 @@ seed = 0
 if st.button('Regenerate'):
     seed = random.randint(0, 1024)
 
-st.sidebar.markdown("The image to image transfer is achieved via the [following checkpoint](https://civitai.com/models/75650/disney-pixar-cartoon-type-b) available on CivitAI.")
+st.sidebar.image("octoml-octo-ai-logo-color.png")
+st.sidebar.markdown("The image to image transfer is achieved via the [following checkpoint](https://civitai.com/models/75650/disney-pixar-cartoon-type-b) on CivitAI.")
 
 st.sidebar.markdown(
     ":warning: **Disclaimer** :warning:: Cartoonizer is built on the foundation of [CLIP Interrogator](https://huggingface.co/spaces/pharma/CLIP-Interrogator) and [Stable Diffusion 1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) models, and is therefore likely to carry forward the potential dangers inherent in these base models. ***It's capable of generating unintended, unsuitable, offensive, and/or incorrect outputs. We therefore strongly recommend exercising caution and conducting comprehensive assessments before deploying this model into any practical applications.***"
