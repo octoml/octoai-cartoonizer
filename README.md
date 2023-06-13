@@ -5,6 +5,8 @@ In this guide you'll learn how to build, deploy and share your own interactive a
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmoreau89-cartoonize-cartoonizer-gwpv6p.streamlit.app/)
 
+[Video Link](https://drive.google.com/file/d/1706jz3K1BxmvZ5lbB0i_maPZmh89aDMS/view?usp=drive_link)
+
 ## Requirements :clipboard:
 
 Let's take a look at the requirements in terms of skill set, hardware and software for each phase of this tutorial.
