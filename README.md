@@ -86,7 +86,46 @@ Under construction.
 
 ### Phase 1: Experiment with Image to Image feature in Stable Diffusion Web UI :woman::arrow_right::princess:
 
-Under construction.
+There is a huge community of stable diffusion enthusiasts out there so whether you find your information on Reddit, youtube, or GitHub, you're sure to find quality content.
+
+I learned how to use Stable diffusion's image to image feature on Youtube actually thanks to the following [video](https://www.youtube.com/watch?v=dSn_vXrjaK8).
+
+You'll find that the community of stable diffusion enthusiasts gravitate around [AUTOMATIC1111's Stable Diffusion Web UI tool](https://github.com/AUTOMATIC1111/stable-diffusion-webui). You'll find that it's a pretty easy tool to onboard with. Follow the installation instructions available [here](https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running).
+
+I highly recommend a machine that has a pretty capable GPU, on AWS I recommend using an instance that has an A10, e.g. a `g5.4xlarge`.
+
+Once you've installed the dependencies, and have cloned the repo locally on your development machine, you can start downloading your favorite checkpoints from CivitAI's website. Download the checkpoints under `stable-diffusion-webui/models/Stable-diffusion/`, and make sure that the files have a `.safetensors` extension.
+
+You can launch the WebUI using the following command:
+```bash
+./webui.sh --share --xformers
+```
+
+Look at what the script prints out - particularly be on the lookout for (the URL will decidedly be different than the one below):
+```
+Running on public URL: https://80870b04f9f578c8cf.gradio.live
+```
+
+This is the URL that you'll paste in your browser to start playing with the Web UI! Once the Web UI has launched, click on the img2img tab to start playing with the image to image generation functionality.
+
+![stable-diffusion-web-ui](assets/stable-diffusion-web-ui.png)
+
+
+Select under `Stable Diffusion checkpoint` the model file that you downloaded under `stable-diffusion-webui/models/Stable-diffusion/`. This will determine the style you get on the output image.
+
+Start by uploading a photo of your choice. In order for image to image to work well, you'll need to provide a textual description of the image you upload under the prompt. This is because Stable Diffusion requires test in order to guide the image that it generates. It would be very cumbersome to have to describe each picture we upload manually, so instead we can use the `Interrogate CLIP` button which invokes a CLIP Interrogator model. This essentially performs the reverse of Stable Diffusion's text-to-image: from an image, it gives you text.
+
+Once you've interrogated the CLIP model, you will be able to see what it has inferred from the image you uploaded. Now you can hit the "Generate" button to see what image it has generated.
+
+It should look pretty convincing overall. But you can spend a lot of time in the GUI to tweak several settings. Starting with `Denoising strength` which you can scale down or up to see how it impacts the generated image. Give it a try!
+
+If you're tired hitting generate button after setting a knob to a different value, you can use the handy `X/Y/Z plot` under the `Script` pull down menu. This lets you sweep across different parameters easily to study the effect these parameters have on your generated image. 
+
+For instance you can set `X type` to `Denoising` and under `X values` sweep values from 0.1 to 0.9 in +0.1 increments by entering `0.1-0.9(+0.1)`. Hit generate and see what you get! You can explore up to 3 parameters in this fashion, really handy!
+
+![cgi_sweep_experiment](assets/cgi_sweep_experiment.png)
+
+Hopefully by playing around long enough with the Stable Diffusion Web UI, you can build really good intuition on how Stable Diffusion works, and build some very neat media. We're going to use that knowledge back into our web app to design a simple, single-shot "cartoonizer" app.
 
 ### Phase 2: Build your own CLIP-Interrogator Docker container :package:
 
