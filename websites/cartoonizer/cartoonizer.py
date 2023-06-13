@@ -6,8 +6,9 @@ import requests
 import random
 
 
-CLIP_ENDPOINT = "https://cartoonizer-clip-test-4jkxk521l3v1.octoai.cloud"
-SD_ENDPOINT = "https://cartoonizer-sd-test-4jkxk521l3v1.octoai.cloud/predict"
+
+CLIP_ENDPOINT = "https://clip-interrogator-demo-4jkxk521l3v1.octoai.cloud"
+SD_ENDPOINT = "https://stable-diffusion-demo-4jkxk521l3v1.octoai.cloud"
 
 # PIL helper
 def crop_center(pil_img, crop_width, crop_height):
@@ -71,6 +72,7 @@ def cartoonize_image(upload, strength, seed):
     # Retrieve prompt
     clip_reply = reply.json()["completion"]["labels"]
 
+    # Uncomment if you want to edit the results of the CLIP model
     # Editable CLIP interrogator output
     # prompt = st.text_area("AI-generated, human editable label:", value=clip_reply)
 
@@ -78,12 +80,13 @@ def cartoonize_image(upload, strength, seed):
     sd_request = {
         "image": image_out_b64.decode("utf8"),
         "prompt": clip_reply,
+        "strength": float(strength)/10,
+        # The rest below is hard coded
         "negative_prompt": "EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry, nsfw",
-        "model": "DisneyPixarCartoon_v10",
+        "model": "cgi",
         "vae": "YOZORA.vae.pt",
         "sampler": "K_EULER_ANCESTRAL",
         "cfg_scale": 7,
-        "strength": float(strength)/10,
         "num_images": 1,
         "seed": seed,
         "width": 512,
@@ -107,18 +110,23 @@ def cartoonize_image(upload, strength, seed):
 st.set_page_config(layout="wide", page_title="Cartoonizer")
 
 st.write("## Cartoonizer - Powered by OctoAI")
+
 st.markdown(
-    "Upload a photo and turn yourself into a CGI character! Try OctoML's new compute service for free by signing up for early access: https://octoml.ai/"
+    "The fastest version of Stable Diffusion in the world is now available on OctoAI, where devs run, tune, and scale generative AI models. [Try it for free here.](http://octoml.ai/)"
 )
 
 st.markdown(
-    " * :camera_with_flash: Tip #1: works best on a square-ish image."
+    "### Upload a photo and turn yourself into a cartoon character!"
+)
+
+st.markdown(
+    " :camera_with_flash: Tip #1: works best on a square image."
 )
 st.markdown(
-    " * :blush: Tip #2: works best on close ups (e.g. portraits), rather than full body or group photos."
+    " :blush: Tip #2: works best on close ups (e.g. portraits), rather than full body or group photos."
 )
 st.markdown(
-    " * :woman-getting-haircut: Tip #3: for best results, avoid cropping heads/faces."
+    " :woman-getting-haircut: Tip #3: for best results, avoid cropping heads/faces."
 )
 
 my_upload = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
@@ -134,10 +142,10 @@ if st.button('Regenerate'):
     seed = random.randint(0, 1024)
 
 st.sidebar.image("octoml-octo-ai-logo-color.png")
-st.sidebar.markdown("The image to image transfer is achieved via the [following checkpoint](https://civitai.com/models/75650/disney-pixar-cartoon-type-b) on CivitAI.")
+st.sidebar.markdown("The image to image generation is achieved via the [following checkpoint](https://civitai.com/models/75650/disney-pixar-cartoon-type-b) on CivitAI.")
 
 st.sidebar.markdown(
-    ":warning: **Disclaimer** :warning:: Cartoonizer is built on the foundation of [CLIP Interrogator](https://huggingface.co/spaces/pharma/CLIP-Interrogator) and [Stable Diffusion 1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5) models, and is therefore likely to carry forward the potential dangers inherent in these base models. ***It's capable of generating unintended, unsuitable, offensive, and/or incorrect outputs. We therefore strongly recommend exercising caution and conducting comprehensive assessments before deploying this model into any practical applications.***"
+    ":warning: **Disclaimer** :warning:: Cartoonizer is built on the foundation of [CLIP Interrogator](https://huggingface.co/spaces/pharma/CLIP-Interrogator) and [Stable Diffusion 1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5), and is therefore likely to carry forward the potential dangers inherent in these base models. ***It's capable of generating unintended, unsuitable, offensive, and/or incorrect outputs. We therefore strongly recommend exercising caution and conducting comprehensive assessments before deploying this model into any practical applications.***"
 )
 
 st.sidebar.markdown(
