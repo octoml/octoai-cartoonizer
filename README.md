@@ -123,7 +123,7 @@ If you're tired hitting generate button after setting a knob to a different valu
 
 For instance you can set `X type` to `Denoising` and under `X values` sweep values from 0.1 to 0.9 in +0.1 increments by entering `0.1-0.9(+0.1)`. Hit generate and see what you get! You can explore up to 3 parameters in this fashion, really handy!
 
-![cgi_sweep_experiment](assets/cgi_sweep_experiment.png)
+![cgi_sweep](assets/cgi_sweep.png)
 
 Hopefully by playing around long enough with the Stable Diffusion Web UI, you can build really good intuition on how Stable Diffusion works, and build some very neat media. We're going to use that knowledge back into our web app to design a simple, single-shot "cartoonizer" app.
 
