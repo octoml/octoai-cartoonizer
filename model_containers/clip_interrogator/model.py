@@ -28,6 +28,7 @@ class Model:
                with the following keys:
 
         - "image" (mandatory): A base64-encoded image.
+        - "mode" (mandatory): A string describing the interrogator mode: one of default, classic, fast, negative.
 
         :return: a dict containing these keys:
 
