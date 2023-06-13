@@ -6,8 +6,8 @@ import requests
 import random
 
 
-CLIP_ENDPOINT = "https://clip-interrogator-4jkxk521l3v1.octoai.cloud"
-SD_ENDPOINT = "https://stable-diffusion-4jkxk521l3v1.octoai.cloud"
+CLIP_ENDPOINT = "https://cartoonizer-clip-test-4jkxk521l3v1.octoai.cloud"
+SD_ENDPOINT = "https://cartoonizer-sd-test-4jkxk521l3v1.octoai.cloud/predict"
 
 # PIL helper
 def crop_center(pil_img, crop_width, crop_height):
