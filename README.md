@@ -654,4 +654,6 @@ Note that many of these models have been trained on incomplete datasets. The lik
 
 With that, be responsible and have fun!
 
-Please don't hesitate to share feedback, or comments to me over at tmoreau@octoml.ai. Cheers.
+Please don't hesitate to share feedback, bugs or issues under: https://github.com/tmoreau89/octoai-cartoonizer/issues
+
+Or got ideas for things you'd like to build? Shoot me an email at tmoreau@octoml.ai. Cheers. :beers:
