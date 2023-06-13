@@ -4,7 +4,7 @@ In this guide you'll learn how to build, deploy and share your own interactive a
 
 
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmoreau89-cartoonize-cartoonizer-gwpv6p.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://octoai-cartoonizer.streamlit.app/)
 
 [Video Walkthrough Link](https://drive.google.com/file/d/1FCHIvKC13xqLgKOF33pF2lWYD5EIsf1u/view?usp=sharing)
 
