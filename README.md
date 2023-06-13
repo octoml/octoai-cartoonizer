@@ -1,6 +1,7 @@
 # OctoAI: Cartoonizer Tutorial :camera::star2::octopus:
 
-In this guide you'll learn how to build, deploy and share your own interactive and engaging image-to-image Generative AI web-application using OctoAI!
+In this guide you'll learn how to build, deploy and share your own interactive and engaging image-to-image Generative AI web-application using the newly launched OctoAI compute services!
+
 
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmoreau89-cartoonize-cartoonizer-gwpv6p.streamlit.app/)
@@ -631,10 +632,26 @@ Whenever a user uploads a new image, the image (1) gets rotated depending on the
 
 First, the image gets sent to the CLIP-Interrogator inference endpoint in order to obtain a prompt. Second, send that prompt along with the image data, and Stable Diffusion parameters such as denoising strength over to the Stable Diffusion endpoint to get a Cartoonized image back!
 
-We can finally display the image and offer the option from the end user to download the image.
+We can finally display the image and offer the option from the end user to download the image. Here's the Cartoonizer app in action! 
 
 ![cartoonizer_screenshot](assets/cartoonizer_screenshot.png)
 
-Here's the Cartoonizer app in action! Enjoy and I hope that this guide helped you build a really neat app that you can feel proud to share with your friends and family!
+#### C. Hosting your webpage publicly using Streamlit
+
+Now that you've been able to successfully test out your web app locally, time to launch it to production! What you'll need to do is create a public GitHub repo that contains the `cartoonizer.py` file.
+
+You'll need to create a Streamlit account - which is free. Once you're logged into Streamlit, you can go to the [landing page](https://share.streamlit.io/), and create a new app.
+
+Here you just need to point to the repo, branch and file path that you want Streamlit to host - and all you have to do is hit `Deploy!`
+
+Within a couple of minutes you have a URL that you can personalize, and share with your friends, colleagues and family!
+
+## Conclusion
+
+I hope that this guide will inspire you to unleash your creativity and build a really neat app that you can feel proud to share with your closest friends and family!
+
+Note that many of these models have been trained on incomplete datasets. The likelihood of these models exhibiting bias is very strong. Please handle open source models with care as results and outcomes can be surprising, or even at times shocking and offensive. We have a responsibility as developers to build systems that are not harmful to others. If your app leads to unexpected behavior, use that as an opportunity to create a healthy discussion around the use of cutting edge AI models, and reach out to people working on AI ethics to discuss solutions to the problems you encounter.
+
+With that, be responsible and have fun!
 
 Please don't hesitate to share feedback, or comments to me over at tmoreau@octoml.ai. Cheers.
