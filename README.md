@@ -594,4 +594,47 @@ Select your CLIP Interrogator mode, upload a picture of your choice, and feel th
 
 Next we'll build the full Cartoonizer app by invoking both CLIP-Interrogator and Stable-Diffusion OctoAI endpoints from within your web app.
 
-Stay tuned - WIP...
+
+#### B. The Cartoonizer Web App :camera::star2::octopus:
+
+Now we're going to build the Cartoonizer frontend - the code build with streamlit is available under [websites/cartoonizer/](websites/cartoonizer/).
+
+A few explanations:
+
+We now have two endpoints which are serving the CLIP-Interrogator model on one hand, and the Stable Diffusion model on the other.
+```python
+CLIP_ENDPOINT = "https://cartoonizer-clip-test-4jkxk521l3v1.octoai.cloud"
+SD_ENDPOINT = "https://cartoonizer-sd-test-4jkxk521l3v1.octoai.cloud/predict"
+```
+
+As shown in the Cartoonizer diagram below, call the CLIP-Interrogator model in the first place to generate a text prompt that describes the input image, which then gets fed into Stable Diffusion along with the input image to perform image to image generation.
+
+![system_overview](assets/system_overview.png)
+
+We also introduce an "imagination slider" in the Web app with the code below, which allows the user to control the denoising strength when generating an image.
+
+```python
+strength = st.slider(
+    ":brain: Imagination Slider (lower: closer to original, higher: more imaginative result)",
+    3, 10, 5)
+```
+
+And finally, we also provide a "regenerate button" that lets us generate a new image based on a new seed.
+
+```python
+seed = 0
+if st.button('Regenerate'):
+    seed = random.randint(0, 1024)
+```
+
+Whenever a user uploads a new image, the image (1) gets rotated depending on the presence of specific EXIF data (this is useful if that image comes straight from your smartphone camera), (2) gets cropped and resized to a 512 by 512 image to make the generate image always match the input image dimensions, and (3) gets converted into a base64 encoding so it can be easily sent over to our inference endpoints.
+
+First, the image gets sent to the CLIP-Interrogator inference endpoint in order to obtain a prompt. Second, send that prompt along with the image data, and Stable Diffusion paramters such as denoising strength over to the Stable Diffusion endpoint to get a Cartoonized image back!
+
+We can finally display the image and offer the option from the end user to download the image.
+
+![cartoonizer_screenshot](assets/cartoonizer_screenshot.png)
+
+Here's the cartoonizer app in action! Enjoy and I hope that this guide helped you build a really neat app that you can feel proud to share with your friends and family!
+
+Please don't hesitate to share feedback, or comments to me over at tmoreau@octoml.ai. Cheers.
