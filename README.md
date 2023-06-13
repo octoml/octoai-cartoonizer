@@ -125,6 +125,10 @@ For instance you can set `X type` to `Denoising` and under `X values` sweep valu
 
 ![cgi_sweep](assets/cgi_sweep.png)
 
+Load a different checkpoint with a different style and see how it affects the output image sweeps!
+
+![comic_sweep](assets/comic_sweep.png)
+
 Hopefully by playing around long enough with the Stable Diffusion Web UI, you can build really good intuition on how Stable Diffusion works, and build some very neat media. We're going to use that knowledge back into our web app to design a simple, single-shot "cartoonizer" app.
 
 ### Phase 2: Build your own CLIP-Interrogator Docker container :package:
