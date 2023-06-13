@@ -644,6 +644,8 @@ You'll need to create a Streamlit account - which is free. Once you're logged in
 
 Here you just need to point to the repo, branch and file path that you want Streamlit to host - and all you have to do is hit `Deploy!`
 
+![streamlit_app_deploy.png](assets/streamlit_app_deploy.png.png)
+
 Within a couple of minutes you have a URL that you can personalize, and share with your friends, colleagues and family!
 
 ## Conclusion
