@@ -5,7 +5,7 @@ In this guide you'll learn how to build, deploy and share your own interactive a
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmoreau89-cartoonize-cartoonizer-gwpv6p.streamlit.app/)
 
-[Video Link](https://drive.google.com/file/d/1706jz3K1BxmvZ5lbB0i_maPZmh89aDMS/view?usp=drive_link)
+[Video Walkthrough Link](https://drive.google.com/file/d/1FCHIvKC13xqLgKOF33pF2lWYD5EIsf1u/view?usp=sharing)
 
 ## Requirements :clipboard:
 
@@ -19,7 +19,7 @@ In total this tutorial takes 1-2 hours depending on how much programming experie
 * 30-60mins depending on how much you want to experiment with Stable Diffusion.
 
 #### Skillset :hatching_chick:
-* Git, and beginer-level command line programming.
+* Git, and beginner-level command line programming.
 
 #### Hardware :computer:
 * A computer of instance with a beefy GPU (Nvidia A10 or better).
@@ -129,7 +129,7 @@ Load a different checkpoint with a different style and see how it affects the ou
 
 ![comic_sweep](assets/comic_sweep.png)
 
-Hopefully by playing around long enough with the Stable Diffusion Web UI, you can build really good intuition on how Stable Diffusion works, and build some very neat media. We're going to use that knowledge back into our web app to design a simple, single-shot "cartoonizer" app.
+Hopefully by playing around long enough with the Stable Diffusion Web UI, you can build really good intuition on how Stable Diffusion works, and build some very neat media. We're going to use that knowledge back into our web app to design a simple, single-shot "Cartoonizer" app.
 
 ### Phase 2: Build your own CLIP-Interrogator Docker container :package:
 
@@ -137,7 +137,7 @@ Let's walk through how you can build your own model container and upload it on D
 
 #### A. Test out CLIP-Interrogator
 
-As we saw in Phase 1, image to image generation depends on being able to generate a prompt from an input image. This promp will be used to guide the generation of the output "cartoonized" image.
+As we saw in Phase 1, image to image generation depends on being able to generate a prompt from an input image. This prompt will be used to guide the generation of the output "Cartoonized" image.
 
 For this exercise, we'll use [pharmapscychotic clip interrogator library](https://github.com/pharmapsychotic/clip-interrogator) which available under MIT license.
 
@@ -313,7 +313,7 @@ transformers==4.27.4
 sentencepiece==0.1.97
 ```
 
-and replace it with, which echo the packages that we installed in Section A. The transformers library has to be set to a slighly older version to work with the `clip-interrogator` library.
+and replace it with, which echo the packages that we installed in Section A. The transformers library has to be set to a slightly older version to work with the `clip-interrogator` library.
 ```
 transformers==4.26.0
 Pillow>=6.2.1
@@ -488,15 +488,15 @@ with the Endpoint URL of your newly launched OctoAI compute server with `/predic
 curl -X POST https://clip-interrogator-4jkxk521l3v1.octoai.cloud/predict \
 ```
 
-As a sanity check, check the inference server logs to see if your model container has received the request. And finally check the `response.json` file to find a lable that should match the one that was returned by the model container we were testing locally in Phase 3, Section D. Amazing!
+As a sanity check, check the inference server logs to see if your model container has received the request. And finally check the `response.json` file to find a label that should match the one that was returned by the model container we were testing locally in Phase 3, Section D. Amazing!
 
 #### B. Launching a Stable-Diffusion endpoint
 
 Repeat the same steps here but this time around we'll give you the URL to the model container you'll be launching with OctoAI. Keep all of the parameters the same. 
 * Under `Endpoint name`, enter "stable-diffusion"
-* Under Under `Container Image`, point to the following `tmoreau89octo/cartoonizer-stable-diffusion:v0.1.0` container, available under this [link](https://hub.docker.com/layers/tmoreau89octo/cartoonizer-stable-diffusion/v0.1.0/images/sha256-cdf204d7ceb81ba39d92e8c3502a272de249510c442ccd142a15147395a13cae?context=repo).
+* Under Under `Container Image`, point to the following `tmoreau89octo/cartoonizer-stable-diffusion:v0.1.1` container, available under this [link](https://hub.docker.com/layers/tmoreau89octo/cartoonizer-stable-diffusion/v0.1.0/images/sha256-cdf204d7ceb81ba39d92e8c3502a272de249510c442ccd142a15147395a13cae?context=repo).
 
-Perform the same steps. We've already tested this one for you, so you'll exercise it when you build the full cartoonizer web app.
+Perform the same steps. We've already tested this one for you, so you'll exercise it when you build the full Cartoonizer web app.
 
 Got your two endpoints up and running? Let's go and build the web app.
 
@@ -512,7 +512,7 @@ We're going to build our web app in two stages. First we're going to test an int
 
 #### A. A simple interactive CLIP-Interrogator frontend :technologist:
 
-You can get all of the code you need to have that fronend up and running under [websites/clip_interrogator/](websites/clip_interrogator/). But to build it from scratch, follow the instructions below:
+You can get all of the code you need to have that frontend up and running under [websites/clip_interrogator/](websites/clip_interrogator/). But to build it from scratch, follow the instructions below:
 
 On your laptop or preferred development machine, set up your python environment so we can install Streamlit.
 
@@ -597,7 +597,7 @@ Next we'll build the full Cartoonizer app by invoking both CLIP-Interrogator and
 
 #### B. The Cartoonizer Web App :camera::star2::octopus:
 
-Now we're going to build the Cartoonizer frontend - the code build with streamlit is available under [websites/cartoonizer/](websites/cartoonizer/).
+Now we're going to build the Cartoonizer frontend - the code build with Streamlit is available under [websites/cartoonizer/](websites/cartoonizer/).
 
 A few explanations:
 
@@ -629,12 +629,12 @@ if st.button('Regenerate'):
 
 Whenever a user uploads a new image, the image (1) gets rotated depending on the presence of specific EXIF data (this is useful if that image comes straight from your smartphone camera), (2) gets cropped and resized to a 512 by 512 image to make the generate image always match the input image dimensions, and (3) gets converted into a base64 encoding so it can be easily sent over to our inference endpoints.
 
-First, the image gets sent to the CLIP-Interrogator inference endpoint in order to obtain a prompt. Second, send that prompt along with the image data, and Stable Diffusion paramters such as denoising strength over to the Stable Diffusion endpoint to get a Cartoonized image back!
+First, the image gets sent to the CLIP-Interrogator inference endpoint in order to obtain a prompt. Second, send that prompt along with the image data, and Stable Diffusion parameters such as denoising strength over to the Stable Diffusion endpoint to get a Cartoonized image back!
 
 We can finally display the image and offer the option from the end user to download the image.
 
 ![cartoonizer_screenshot](assets/cartoonizer_screenshot.png)
 
-Here's the cartoonizer app in action! Enjoy and I hope that this guide helped you build a really neat app that you can feel proud to share with your friends and family!
+Here's the Cartoonizer app in action! Enjoy and I hope that this guide helped you build a really neat app that you can feel proud to share with your friends and family!
 
 Please don't hesitate to share feedback, or comments to me over at tmoreau@octoml.ai. Cheers.
