@@ -81,7 +81,9 @@ In total this tutorial takes 1-2 hours depending on how much programming experie
 
 ## Disclaimer
 
-Under construction.
+Disclaimer: "Cartoonizer" is built on the foundation of CLIP Interrogator and Stable Diffusion 1.5, and is therefore likely to carry forward the potential dangers inherent in these base models. It's capable of generating unintended, unsuitable, offensive, and/or incorrect outputs. We therefore strongly recommend exercising caution and conducting comprehensive assessments before deploying this model into any practical applications.
+
+By releasing this model, we acknowledge the possibility of it being misused. However, we believe that by making such models publicly available, we can encourage the commercial and research communities to delve into the potential risks of generative AI and subsequently, devise improved strategies to lessen these risks in upcoming models. If you are researcher and would like to study this subject further, contact us and we’d love to work with you!
 
 ## Step-by-step Cartoonizer Tutorial :books:
 
