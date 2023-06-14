@@ -3,9 +3,6 @@
 In this guide you'll learn how to build, deploy and share your own interactive and engaging image-to-image Generative AI web-application using the newly launched OctoAI compute services!
 
 
-
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://octoai-cartoonizer.streamlit.app/)
-
 [Video Walkthrough Link](https://drive.google.com/file/d/1FCHIvKC13xqLgKOF33pF2lWYD5EIsf1u/view?usp=sharing)
 
 ## Requirements :clipboard:
@@ -452,7 +449,7 @@ Once the upload has completed, go on your docker hub landing page to see if the 
 
 Success! We're now ready to launch our nifty CLIP-Interrogator inference endpoint.
 
-### Phase 3: Deploy your inference REST endpoints :octopus:
+### Phase 3: Deploy your inference endpoints :octopus:
 
 In this part of the tutorial we're going to deploy two OctoAI compute service inference endpoints.
 
@@ -497,7 +494,7 @@ As a sanity check, check the inference server logs to see if your model containe
 
 Repeat the same steps here but this time around we'll give you the URL to the model container you'll be launching with OctoAI. Keep all of the parameters the same. 
 * Under `Endpoint name`, enter "stable-diffusion"
-* Under Under `Container Image`, point to the following `tmoreau89octo/cartoonizer-stable-diffusion:v0.1.1` container, available under this [link](https://hub.docker.com/layers/tmoreau89octo/cartoonizer-stable-diffusion/v0.1.0/images/sha256-cdf204d7ceb81ba39d92e8c3502a272de249510c442ccd142a15147395a13cae?context=repo).
+* Under Under `Container Image`, point to the following `jwfromm/tvm-stable-diffusion:latest` container, available under this [link](https://hub.docker.com/r/jwfromm/tvm-stable-diffusion/tags) - it was built using in-house optimizations that made this the fastest version of Stable Diffusion available.
 
 Perform the same steps. We've already tested this one for you, so you'll exercise it when you build the full Cartoonizer web app.
 

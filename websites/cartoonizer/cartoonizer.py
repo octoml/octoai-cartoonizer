@@ -7,8 +7,8 @@ import random
 
 
 
-CLIP_ENDPOINT = "https://clip-interrogator-demo-4jkxk521l3v1.octoai.cloud"
-SD_ENDPOINT = "https://stable-diffusion-demo-4jkxk521l3v1.octoai.cloud"
+CLIP_ENDPOINT = "https://cartoonizer-clip-test-4jkxk521l3v1.octoai.cloud"
+SD_ENDPOINT = "https://sd-demo-gcsv8y11zs17.octoai.cloud"
 
 # PIL helper
 def crop_center(pil_img, crop_width, crop_height):
@@ -29,7 +29,7 @@ def convert_image(img):
     byte_im = buf.getvalue()
     return byte_im
 
-def cartoonize_image(upload, strength, seed):
+def cartoonize_image(upload, strength, seed, extra_desc):
     input_img = Image.open(upload)
     try:
         # Rotate based on Exif Data
@@ -72,26 +72,27 @@ def cartoonize_image(upload, strength, seed):
     # Retrieve prompt
     clip_reply = reply.json()["completion"]["labels"]
 
-    # Uncomment if you want to edit the results of the CLIP model
-    # Editable CLIP interrogator output
-    # prompt = st.text_area("AI-generated, human editable label:", value=clip_reply)
+    # Add the extra desc
+    prompt = extra_desc + ", " + clip_reply
 
     # Prepare SD request for img2img
     sd_request = {
-        "image": image_out_b64.decode("utf8"),
-        "prompt": clip_reply,
+        "init_image": image_out_b64.decode("utf8"),
+        "prompt": prompt,
         "strength": float(strength)/10,
         # The rest below is hard coded
         "negative_prompt": "EasyNegative, drawn by bad-artist, sketch by bad-artist-anime, (bad_prompt:0.8), (artist name, signature, watermark:1.4), (ugly:1.2), (worst quality, poor details:1.4), bad-hands-5, badhandv4, blurry, nsfw",
-        "model": "cgi",
-        "vae": "YOZORA.vae.pt",
-        "sampler": "K_EULER_ANCESTRAL",
-        "cfg_scale": 7,
-        "num_images": 1,
+        "model_name": "cartoon_v2",
+        "scheduler": "DPM++2MKarras",
+        "guidance_scale": 7,
+        "num_images_per_prompt": 1,
         "seed": seed,
         "width": 512,
         "height": 512,
-        "steps": 20
+        "num_inference_steps": 20,
+        "clip_skip": 2,
+        "loras": None,
+        "text_inversions": None
     }
     reply = requests.post(
         "{}/predict".format(SD_ENDPOINT),
@@ -99,7 +100,7 @@ def cartoonize_image(upload, strength, seed):
         json=sd_request
     )
 
-    img_bytes = b64decode(reply.json()["completion"]["image_0"])
+    img_bytes = b64decode(reply.json()["image_0"])
     cartoonized = Image.open(BytesIO(img_bytes), formats=("png",))
 
     col2.write("Transformed Image :star2:")
@@ -133,6 +134,11 @@ my_upload = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
 col1, col2 = st.columns(2)
 
+extra_desc = st.text_input("Add more context to customize the output")
+# extra_desc_strength = st.slider("Strength of extra context. The higher this is the more your text matters", 1.0, 5.0, value=1.0)
+# if extra_desc:
+#     extra_desc = f"({extra_desc}: {extra_desc_strength})"
+
 strength = st.slider(
     ":brain: Imagination Slider (lower: closer to original, higher: more imaginative result)",
     3, 10, 5)
@@ -157,4 +163,4 @@ st.sidebar.markdown(
 )
 
 if my_upload is not None:
-    cartoonize_image(my_upload, strength, seed)
+    cartoonize_image(my_upload, strength, seed, extra_desc)
