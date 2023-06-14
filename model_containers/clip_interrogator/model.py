@@ -28,7 +28,6 @@ class Model:
                with the following keys:
 
         - "image" (mandatory): A base64-encoded image.
-        - "mode" (mandatory): A string describing the interrogator mode: one of default, classic, fast, negative.
 
         :return: a dict containing these keys:
 
@@ -36,17 +35,9 @@ class Model:
         """
 
         image = inputs.get("image", None)
-        mode = inputs.get("mode", "default")
         image_bytes = BytesIO(b64decode(image))
         image_dat = Image.open(image_bytes).convert('RGB')
-        if mode == "fast":
-            outputs = self._clip_interrogator.interrogate_fast(image_dat)
-        elif mode == "classic":
-            outputs = self._clip_interrogator.interrogate_classic(image_dat)
-        elif mode == "negative":
-            outputs = self._clip_interrogator.interrogate_negative(image_dat)
-        else:
-            outputs = self._clip_interrogator.interrogate(image_dat)
+        outputs = self._clip_interrogator.interrogate_fast(image_dat)
 
         response = {"completion": {"labels": outputs}}
 
