@@ -88,7 +88,7 @@ I learned how to use Stable diffusion's image to image feature on Youtube actual
 
 You'll find that the community of stable diffusion enthusiasts gravitate around [AUTOMATIC1111's Stable Diffusion Web UI tool](https://github.com/AUTOMATIC1111/stable-diffusion-webui). You'll find that it's a pretty easy tool to onboard with. 
 
-To launch the web UI on OctoAI and download your custom checkpoint/style from CivitAI into the web UI, follow these [docs](https://automatic1111-demo-id773qekdhuq.octoai.cloud)
+To launch the web UI on OctoAI and download your custom checkpoint/style from CivitAI into the web UI, follow these [docs](https://docs.octoai.cloud/docs/automatic1111).
 
 ![stable-diffusion-web-ui](assets/stable-diffusion-web-ui.png)
 
