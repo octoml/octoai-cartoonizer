@@ -14,16 +14,12 @@ In total this tutorial takes 1-2 hours depending on how much programming experie
 ### Phase 1: Experiment with Image to Image feature in Stable Diffusion Web UI :woman::arrow_right::princess:
 
 #### Time :clock1:
-* 30-60mins depending on how much you want to experiment with Stable Diffusion.
+* 5-30mins depending on how much you want to experiment with Stable Diffusion.
 
 #### Skillset :hatching_chick:
-* Git, and beginner-level command line programming.
-
-#### Hardware :computer:
-* A computer of instance with a beefy GPU (Nvidia A10 or better).
+* Creativity!
 
 #### Software :floppy_disk:
-* [AUTOMATIC1111 stable diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) which is under AGPL-3.0 license.
 * A model checkpoint of your choice from [CivitAI's website](https://civitai.com/).
 * An image of your choice.
 
@@ -90,26 +86,11 @@ There is a huge community of stable diffusion enthusiasts out there so whether y
 
 I learned how to use Stable diffusion's image to image feature on Youtube actually thanks to the following [video](https://www.youtube.com/watch?v=dSn_vXrjaK8).
 
-You'll find that the community of stable diffusion enthusiasts gravitate around [AUTOMATIC1111's Stable Diffusion Web UI tool](https://github.com/AUTOMATIC1111/stable-diffusion-webui). You'll find that it's a pretty easy tool to onboard with. Follow the installation instructions available [here](https://github.com/AUTOMATIC1111/stable-diffusion-webui#installation-and-running).
+You'll find that the community of stable diffusion enthusiasts gravitate around [AUTOMATIC1111's Stable Diffusion Web UI tool](https://github.com/AUTOMATIC1111/stable-diffusion-webui). You'll find that it's a pretty easy tool to onboard with. 
 
-I highly recommend a machine that has a pretty capable GPU, on AWS I recommend using an instance that has an A10, e.g. a `g5.4xlarge`.
-
-Once you've installed the dependencies, and have cloned the repo locally on your development machine, you can start downloading your favorite checkpoints from CivitAI's website. Download the checkpoints under `stable-diffusion-webui/models/Stable-diffusion/`, and make sure that the files have a `.safetensors` extension.
-
-You can launch the WebUI using the following command:
-```bash
-./webui.sh --share --xformers
-```
-
-Look at what the script prints out - particularly be on the lookout for (the URL will decidedly be different than the one below):
-```
-Running on public URL: https://80870b04f9f578c8cf.gradio.live
-```
-
-This is the URL that you'll paste in your browser to start playing with the Web UI! Once the Web UI has launched, click on the img2img tab to start playing with the image to image generation functionality.
+To launch the web UI on OctoAI and download your custom checkpoint/style from CivitAI into the web UI, follow these [docs](https://automatic1111-demo-id773qekdhuq.octoai.cloud)
 
 ![stable-diffusion-web-ui](assets/stable-diffusion-web-ui.png)
-
 
 Select under `Stable Diffusion checkpoint` the model file that you downloaded under `stable-diffusion-webui/models/Stable-diffusion/`. This will determine the style you get on the output image.
 
