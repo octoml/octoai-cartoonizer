@@ -9,7 +9,7 @@ In this guide you'll learn how to build, deploy and share your own interactive a
 
 Let's take a look at the requirements in terms of skill set, hardware and software for each phase of this tutorial.
 
-In total this tutorial takes 1-2 hours depending on how much programming experience you have and how much you want to experiment with stable diffusion functionality. Note that we've designed this tutorial to be as approachable as possible. Very minimal programming experience is required here to be successful.
+In total this tutorial takes 30mins - 1 hour, depending on how much programming experience you have and how much you want to experiment with stable diffusion functionality. Note that we've designed this tutorial to be as approachable as possible. Very minimal programming experience is required here to be successful.
 
 ### Phase 1: Experiment with Image to Image feature in Stable Diffusion Web UI :woman::arrow_right::princess:
 
@@ -24,26 +24,10 @@ In total this tutorial takes 1-2 hours depending on how much programming experie
 * An image of your choice.
 
 
-### Phase 2: Build your own CLIP-Interrogator Docker container :package:
+### Phase 2: Clone a production-grade Stable Diffusion and CLIP endpoint on OctoAI :octopus:
 
 #### Time :clock1230:
-* 15-30 mins.
-
-#### Skillset :hatching_chick:
-* Git and beginner-level command line and Python programming.
-
-#### Hardware :computer:
-* A computer of instance with a decent GPU (Nvidia T4 or better).
-
-#### Software :floppy_disk:
-* [Docker Engine](https://docs.docker.com/engine/) and a [Docker Hub](https://hub.docker.com/) account.
-* [pharmapscychotic clip interrogator library](https://github.com/pharmapsychotic/clip-interrogator) which available under MIT license.
-* The ["Build a Container from Python" guide](https://docs.octoai.cloud/docs/create-custom-endpoints-from-python-code) from OctoAI's website.
-
-### Phase 3: Deploy your inference REST endpoint :octopus:
-
-#### Time :clock1230:
-* 5-15 mins.
+* 5 mins
 
 #### Skillset :hatching_chick:
 * No experience needed to launch the OctoAI endpoint. Beginner-level command line programming for testing.
@@ -55,9 +39,9 @@ In total this tutorial takes 1-2 hours depending on how much programming experie
 * [OctoAI's compute service](https://docs.octoai.cloud/docs) with a user account.
 * The CLIP-Interrogator model container built in Phase 2 and uploaded on [Docker Hub](https://hub.docker.com/).
 * A Stable Diffusion model container that we built for you.
-* A test script to exercise your newly-launched OctoAI endpoint.s
+* A test script to exercise your newly-launched OctoAI endpoint.
 
-### Phase 4: Build your own Streamlit Web Frontend :technologist:
+### Phase 3: Build your own Streamlit Web Frontend :technologist:
 
 #### Time :clock1230:
 * 15-30 mins.
@@ -112,164 +96,26 @@ Load a different checkpoint with a different style and see how it affects the ou
 
 Hopefully by playing around long enough with the Stable Diffusion Web UI, you can build really good intuition on how Stable Diffusion works, and build some very neat media. We're going to use that knowledge back into our web app to design a simple, single-shot "Cartoonizer" app.
 
-### Phase 2: Build your own CLIP-Interrogator Docker container :package:
+### Phase 2: Get a production-grade Stable Diffusion and CLIP endpoint on OctoAI :octopus:
+Go to the [OctoAI compute service website](https://octoai.cloud/). Hit `Login` at the bottom left of the page and log in with your preferred authentication method (email, Google or GitHub).
 
-Let's walk through how you can build your own model container and upload it on DockerHub. Once uploaded you can use OctoAI's compute service to serve the model container behind an easy to use REST endpoint. This makes your model easy to access, manage and scale based on your use requirements.
+Then, on OctoAI's [templates page](https://octoai.cloud/templates), you'll be able to find a Stable Diffusion quickstart template for Text to Image Generation as well as a CLIP template for Image Captioning. 
 
-#### A. Test out CLIP-Interrogator
+Because Stable Diffusion is hosted as a quickstart template, you can immediately run inferences on it for free without waiting for cold start. Simply click on the Stable Diffusion template: <img width="1281" alt="Screenshot 2023-07-13 at 2 31 52 PM" src="https://github.com/octoml/octoai-cartoonizer/assets/31609083/6152d7ea-d6e1-476d-a682-c1f55e0cac6e"> That will bring you to a page with a demo, endpoint URL, and an example CURL command on how to use the endpoint: <img width="1295" alt="Screenshot 2023-07-13 at 2 33 02 PM" src="https://github.com/octoml/octoai-cartoonizer/assets/31609083/05d7799f-4077-44ef-9bb5-c7a48fead18f"> 
 
-As we saw in Phase 1, image to image generation depends on being able to generate a prompt from an input image. This prompt will be used to guide the generation of the output "Cartoonized" image.
+Copy down the endpoint URL, which we will use later in this tutorial.
 
-For this exercise, we'll use [pharmapscychotic clip interrogator library](https://github.com/pharmapsychotic/clip-interrogator) which available under MIT license.
 
-We follow the instructions available to their website. Namely from a computer/instance that you can program on, open a terminal (or ssh into it) and do the following.
+Next, go back to the [templates page](https://octoai.cloud/templates), locate the CLIP template for Image Captioning, and click the clone button next to it.
+<img width="1312" alt="Screenshot 2023-07-13 at 2 29 37 PM" src="https://github.com/octoml/octoai-cartoonizer/assets/31609083/5d4d7212-3503-46eb-a742-8b32ddaa066e">
 
-Create and activate a python virtual environment. This will create a new local environment where you can install pip packages without needing to worry about breaking dependencies for your other Python projects.
+When cloning a template, you can set a custom name, minimum hardware replicas, maximum hardware replicas, and privacy setting for your endpoint. If you want to learn more about these parameters, click on the tooltips next to each parameter. 
 
-```bash
-cd $MY_CLIP_TEST_DIRECTORY
-python3 -m venv .venv
-source .venv/bin/activate
-```
+<img width="817" alt="Screenshot 2023-07-13 at 2 36 39 PM" src="https://github.com/octoml/octoai-cartoonizer/assets/31609083/7cd28c89-c234-42b6-abca-8ed5465557e2">
 
-Now install with pip.
-```bash
-# install torch with GPU support for example:
-pip3 install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu117
 
-# install clip-interrogator and Pillow (image library)
-pip3 install clip-interrogator==0.5.4
-pip3 install Pillow
-```
-
-You are ready to test out CLIP on an image of your choice with the following python test script that you can save in `test_clip.py`. Replace `my_test_image.png` below to point to your input image.
-```python
-# Import Pillow image library
-from PIL import Image
-# Import CLIP Interrogator library
-from clip_interrogator import Config, Interrogator
-
-# Open image
-image = Image.open(my_test_image.png).convert('RGB')
-# Initialize interrogator model with OpenAI's ViT-L-14 sentence transformer (https://huggingface.co/sentence-transformers/clip-ViT-L-14)
-ci = Interrogator(Config(clip_model_name="ViT-L-14/openai"))
-
-# Invoke the interrogator, and print the text that it returns
-print(ci.interrogate(image))
-```
-
-#### B. Familiarize yourself with OctoAI's guide to building a model container
-
-We're going to use the [Build a Container from Python Guide](https://docs.octoai.cloud/docs/create-custom-endpoints-from-python-code) as a guide to build our own Clip-Interrogator model. Don't be intimidated by the fact that this guide is labeled as "advanced".
-
-Let's start with the files. All you need are the following files to build your model container:
-* `model.py` is where we define how to run an inference on your model of choice
-* `server.py` wraps the mode in a [Sanic](https://sanic.dev/en/) server
-* `requirements.txt` that lists all of the python libraries that the model container requires to run properly
-* `Dockerfile` which installs all of the dependencies, and downloads the model files into a Docker image at build time so that at deployment time, our model container is ready to fire!
-
-#### C. Build your own model container - a step by step guide
-
-To help you, we've provided all of the code you need to build your own CLIP-Interrogator model container under [model_containers/clip_interrogator](model_containers/clip_interrogator). But let's go over how we managed to write this code so you can replicate this for models of your choice!
-
-##### i. `model.py`
-Let's edit the `model.py` file from the guide. The guide assumes that we're packaging a FLAN-T5-small text generation model into a model container. We need to make a few edits to this file to replace that model with our CLIP-Interrogator model.
-
-Let's first replace:
-```python
-from transformers import T5ForConditionalGeneration, T5Tokenizer
-```
-
-with:
-```python
-from base64 import b64decode
-from io import BytesIO
-from PIL import Image
-from clip_interrogator import Config, Interrogator
-```
-
-We don't need the `transformers` library in the model file. What we'll need are libraries to process images from a byte input format (`base64`, `io`, `PIL`) because that's how it will be sent over to the model inference server. Then we'll need the `clip_interrogator` library to initialize and invoke our image to text model.
-
-Next we'll need to modify the `Model` class definition.
-
-Let's replace the `__init__()` method:
-
-```python
-    def __init__(self):
-        """Initialize the model."""
-        self._tokenizer = T5Tokenizer.from_pretrained(_MODEL_NAME)
-        self._model = T5ForConditionalGeneration.from_pretrained(_MODEL_NAME).to(
-            _DEVICE
-        )
-```
-
-with:
-```python
-    def __init__(self):
-        """Initialize the model."""
-        self._clip_interrogator = Interrogator(Config(
-                clip_model_name="ViT-L-14/openai",
-                clip_model_path='cache',
-                device="cuda:0" if torch.cuda.is_available() else "cpu"))
-```
-Here the idea is to initialize the model as we did in our experiments in part A. This time around we'll specify to use the GPU as the preferred device to run the model on. 
-
-Finally, let's replace the `predict()` method:
-
-```python
-    def predict(self, inputs: typing.Dict[str, str]) -> typing.Dict[str, str]:
-        """Return a dict containing the completion of the given prompt.
-
-        :param inputs: dict of inputs containing a prompt and optionally the max length
-            of the completion to generate.
-        :return: a dict containing the generated completion.
-        """
-        prompt = inputs.get("prompt", None)
-        max_length = inputs.get("max_length", 2048)
-
-        input_ids = self._tokenizer(prompt, return_tensors="pt").input_ids.to(_DEVICE)
-        output = self._model.generate(input_ids, max_length=max_length)
-        result = self._tokenizer.decode(output[0], skip_special_tokens=True)
-
-        return {"completion": result}
-```
-
-with:
-
-```python
-    def predict(self, inputs: typing.Dict[str, typing.Any]) -> typing.Dict[str, str]:
-        """Return interrogation for the given image.
-
-        :param inputs: dict of inputs containing model inputs
-               with the following keys:
-
-        - "image" (mandatory): A base64-encoded image.
-        - "mode" (mandatory): A
-
-        :return: a dict containing these keys:
-
-        - "labels": String containing the labels.
-        """
-
-        image = inputs.get("image", None)
-        mode = inputs.get("mode", "default")
-        image_bytes = BytesIO(b64decode(image))
-        image_dat = Image.open(image_bytes).convert('RGB')
-        if mode == "fast":
-            outputs = self._clip_interrogator.interrogate_fast(image_dat)
-        elif mode == "classic":
-            outputs = self._clip_interrogator.interrogate_classic(image_dat)
-        elif mode == "negative":
-            outputs = self._clip_interrogator.interrogate_negative(image_dat)
-        else:
-            outputs = self._clip_interrogator.interrogate(image_dat)
-
-        response = {"completion": {"labels": outputs}}
-
-        return response
-```
-
-This is really the hardest part of this tutorial (but as you see it's easy to follow). The idea here is that `predict()` takes in an input dictionary, which contains an `image: base-64 encoded image` and a `mode: string` key-value pair. The mode string can be one of `fast`, `classic`, `negative` and `default` which provide different [interrogation modes](https://github.com/pharmapsychotic/clip-interrogator/blob/main/clip_interrogator/clip_interrogator.py#L205-L255) offered by the CLIP interrogator. To quote the code comments:
+After you click Clone, you'll see a new page for your endpoint, where you can once again locate the endpoint URL and copy it down for use later. 
+- This `/predict` route at this endpoint URL will run inferences that create captions for images. The route takes in a JSON input, which contains an `image: base-64 encoded image` and a `mode: string` key-value pair. The mode string can be one of `fast`, `classic`, `negative` and `default` which provide different [interrogation modes](https://github.com/pharmapsychotic/clip-interrogator/blob/main/clip_interrogator/clip_interrogator.py#L205-L255) offered by the CLIP interrogator. 
 
 | Mode | Explanation|
 |------|------------|
@@ -278,214 +124,16 @@ This is really the hardest part of this tutorial (but as you see it's easy to fo
 | Negative mode | Chains together the most dissimilar terms to the image. It can be used to help build a negative prompt to pair with the regular positive prompt and often improve the results of generated images particularly with Stable Diffusion 2. |
 | Default mode | Default interrogation mode. |
 
-It returns an output dictionary that contains an `labels: label_string` key-value pair.
+- The `/predict` route returns an output dictionary that contains an `labels: label_string` key-value pair.
 
-That's a wrap for what we need to change in `model.py`!
 
-##### ii. `server.py`
-
-The beauty is - you don't have to change a line here - server code implementation stays pretty constant across different model container implementations.
-
-##### iii. `requirements.txt`
-
-Remove the following requirements which we won't need:
+As a sanity check, we can try an inference on this CLIP endpoint, and confirm that we got a JSON output that we expected:
 ```
-transformers==4.27.4
-sentencepiece==0.1.97
+curl -X POST "https://clip-demo-23ao26kvg603.octoai.cloud/predict"  -H "content-type: application/json" --data-raw '{"image": "", "mode": "classic”}'
 ```
 
-and replace it with, which echo the packages that we installed in Section A. The transformers library has to be set to a slightly older version to work with the `clip-interrogator` library.
-```
-transformers==4.26.0
-Pillow>=6.2.1
-clip-interrogator==0.5.4
-```
 
-##### iv. `Dockerfile`
-
-Again, no need to make changes here!
-
-##### v. `Makefile`
-
-The [Create Custom Endpoints from Python Code](https://docs.octoai.cloud/docs/create-custom-endpoints-from-python-code) guide does not include a makefile, but I've included one that's just going to make our lives a bit easier.
-
-```makefile
-IMAGE_TAG ?= clip-interrogator
-CONTAINER_NAME ?= ${IMAGE_TAG:%:latest=%}
-INFERENCE_SERVER_PORT ?= 8000
-
-mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-mkfile_dir := $(dir $(mkfile_path))
-
-build:
-	docker build -t "${IMAGE_TAG}" --progress string .
-
-run:
-	docker run -d --rm -p ${INFERENCE_SERVER_PORT}:8000 \
-		--gpus all \
-		--name "${CONTAINER_NAME}" "${IMAGE_TAG}"
-
-stop:
-	docker stop "${CONTAINER_NAME}"
-
-.PHONY: build run stop
-```
-
-Thanks to this `Makefile` you can use make commands to accomplish the following.
-
-| Make command | Task |
-|--------------|------|
-| make build | build the `clip-interrogator` container (takes a few minutes) |
-| make run | runs the `clip-interrogator` container so you can test it |
-| make stop | stops the `clip-interrogator` container when you are done testing it |
-
-In your model container directory, all you have to do is run the following commands.
-
-```bash
-cd $MY_CLIP_INTERROGATOR_MODEL_CONTAINER_DIRECTORY
-make build # takes a couple of minutes
-make run # runs docker container
-
-docker container ls # shows you what containers are running - you should see the clip-interrogator image
-docker logs clip-interrogator # dumps the logs from that container
-```
-
-From dumping the logs, you'll see the following after ~30s goes by.
-
-```text
-Loading BLIP model...
-load checkpoint from https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_large_caption.pth
-Loading CLIP model...
-Loaded CLIP model and data in 5.63 seconds.
-```
-
-Your container is running locally (i.e. localhost) and listening in on port 8000. Time to test it out!
-
-#### D. Testing your model container
-
-You now have a model container server running and listening in for client requests. Let's build a simple script that will exercise the CLIP-Interrogator model container. Under `test_curl.sh` write the following bash code. Note that you'll have to change `my_test_image.png` to whatever photo you want to use to test the CLIP-Interrogator model.
-
-```bash
-#!/bin/bash
-
-set -euxo pipefail
-
-docker_port=$(docker port clip-interrogator 8000/tcp)
-ENDPOINT=localhost:${docker_port##*:}
-
-echo "{\"mode\": \"fast\", " > request.json
-echo "\"image\": \"" >> request.json
-base64 my_test_image.png >> request.json
-echo "\"}" >> request.json
-
-curl -X POST http://${ENDPOINT}/predict \
-    -H "Content-Type: application/json" \
-    --data @request.json > response.json
-```
-
-Locally, you'll see that new files have popped up. One named `request.json` contains the REST request data sent to the endpoint. The one named `response.json` contains the REST response received from the endpoint.
-
-Execute the test with the following
-```bash
-chmod u+x test_curl.sh
-./test_curl.sh
-```
-
-Because we're using the `fast` clip interrogator mode in this test, the response should take about 2 seconds to come back. Open the `response.json` file in a text editor and look at is contents - you should find in its contents a description of the `my_test_image.png` image you picked -- for instance:
-
-```
-{"completion":{"labels":"a close up of a person wearing glasses and a scarf, ..., wearing small round glasses"}}
-```
-
-To see what happened on the server side, remember you can always look at the logs with `docker logs clip-interrogator`.
-
-This time, try out the other modes (`classic`, `default`, `negative`) and see how it impacts the labels you get and also the time it takes to generate the labels!
-
-When you're finished running the tests, don't forget to stop the container with the following make command: 
-```bash
-make stop
-```
-
-#### E. Uploading your model to a Docker Hub repository
-
-We've build our model container and have tested it. It's ready to be uploaded to [Docker Hub](https://hub.docker.com/)!
-
-First create an account on [their website](https://hub.docker.com/) if you haven't done so already. On your dashboard, you can now create a new repository, by clicking on the `Create repository button`.
-
-Under your namespace, let's name our repository `clip-interrogator`, and describe it as you see fit. Set the Visibility to `Public` instead of `Private`. Hit the `Create` button.
-
-Once that's been created, we're ready to upload our newly minted model container to this repository. Back to the terminal run the following and replace $DOCKER_USERNAME with your actual docker hub username:
-
-```bash
-docker login # enter your dockerhub credentials
-docker tag clip-interrogator:latest $DOCKER_USERNAME/clip-interrogator:v0.1.0 # tag your image and version it
-docker push $DOCKER_USERNAME/clip-interrogator:v0.1.0 # push it!
-```
-
-It can take a few minutes to push the docker image to the repository depending on the speed of your internet connection. Note that this image is about 7GB big because we've downloaded the models weights into it, it'll affects how long it takes to upload it.
-
-Once the upload has completed, go on your docker hub landing page to see if the new image has appeared under the repository you have just created.
-
-![dockerhub](assets/dockerhub.png)
-
-Success! We're now ready to launch our nifty CLIP-Interrogator inference endpoint.
-
-### Phase 3: Deploy your inference endpoints :octopus:
-
-In this part of the tutorial we're going to deploy two OctoAI compute service inference endpoints.
-
-One to serve the CLIP-Interrogator model container that we just built and uploaded into Docker Hub. Another one to serve the [Stable Diffusion model container](https://hub.docker.com/repository/docker/tmoreau89octo/cartoonizer-stable-diffusion/general) that we've built for your convenience. You are of course free or even encouraged to build your own based on what you learned in Phase 2 of this tutorial!
-
-#### A. Launching a CLIP-Interrogator endpoint
-
-Go to the [OctoAI compute service website](https://octoai.cloud/). Hit `Login` at the bottom left of the page and log in with your preferred authentication method (email, Google or GitHub).
-
-Time to launch our endpoint. If you want to have a detailed guide on how to do this, check out the [Create a Custom Endpoint from a Container](https://docs.octoai.cloud/docs/create-custom-endpoints-from-a-container) guide. If you don't want to read, that's okay, it should be really straightforward!
-
-So let's click on `Endpoints` at the top left of the OctoAI landing page. Next, click on `New endpoint` to create your very first endpoint!
-* Under `Endpoint name`, enter "clip-interrogator"
-* Under `Container Image`, enter the tag you used to upload your model to dockerhub. You can always use the one we build for the tutorial: ["tmoreau89octo/cartoonizer-clip-interrogator:v0.1.0"](https://hub.docker.com/layers/tmoreau89octo/cartoonizer-clip-interrogator/v0.1.0/images/sha256-f9b5e650856d1020013fcebae02d65dfba4bb2825d5507d37d85e7ccd3f5dc35?context=repo).
-* Under `Container Port`, we're going to use port "8000".
-* Keep the `Registry Credential` unchanged ("Public").
-* Keep the `Health check path` unchanged ("/healthcheck").
-* Turn on the `Enable public access` toggle switch.
-* No need to specify secrets.
-* Under `Select Hardware` click on the "Small 16GB: instance that is equipped with an T4 GPU.
-* Set `Min Replicas` to "1", and `Max Replicas` to "1" for this experiment.
-* Leave the timeout as is.
-
-![octoai](assets/octoai.png)
-
-Now hit `Create`! You'll get informed that the very first inference will undergo several minutes of cold start. This is normal. Wait for the blue square under `Replicas` to turn solid - it usually takes a minute or two. That's how you know that the endpoint is up and ready to be tested! You can check out the logs by clicking on the `Logs` button at the top right. It should look very much like the logs of the docker container you ran locally in Phase 3, Section C.
-
-Note the Endpoint URL! We're going to use this one in a second to test our endpoint. To test your brand new OctoAI endpoint, we cna re-use the `test_curl.sh` script used in Phase 3, Section D with a small modification. Change the following line:
-
-```bash
-curl -X POST http://${ENDPOINT}/predict \
-```
-
-with the Endpoint URL of your newly launched OctoAI compute server with `/predict` appended to it:
-```bash
-curl -X POST https://clip-interrogator-4jkxk521l3v1.octoai.cloud/predict \
-```
-
-As a sanity check, check the inference server logs to see if your model container has received the request. And finally check the `response.json` file to find a label that should match the one that was returned by the model container we were testing locally in Phase 3, Section D. Amazing!
-
-#### B. Launching a Stable-Diffusion endpoint
-
-Repeat the same steps here but this time around we'll give you the URL to the model container you'll be launching with OctoAI. Keep all of the parameters the same. 
-* Under `Endpoint name`, enter "stable-diffusion"
-* Under Under `Container Image`, point to the following `jwfromm/tvm-stable-diffusion:latest` container, available under this [link](https://hub.docker.com/r/jwfromm/tvm-stable-diffusion/tags) - it was built using in-house optimizations that made this the fastest version of Stable Diffusion available.
-
-Perform the same steps. We've already tested this one for you, so you'll exercise it when you build the full Cartoonizer web app.
-
-Got your two endpoints up and running? Let's go and build the web app.
-
-#### C. Stopping your endpoints
-
-Just like when you use cloud instances, it's suboptimal to let them run indefinitely (particularly if your min-replicas is set to 0). So when you're done with this tutorial, you can stop you OctoAI endpoint by clicking on the `Endpoint` button on the top left of the OctoAI landing page, select the endpoint that you want to stop, hit `Edit` at the top left, and hit `Delete`.
-
-### Phase 4: Build your own Streamlit Web Apps
+### Phase 3: Build your own Streamlit Web Apps
 
 Yes, we have our AI endpoints up! Time to build our web app! No web design experience? No problem. All you need is a bit of Python experience, thanks to the Streamlit library that lets you quickly build simple web apps and host them for free as long as you host your source code on a public GitHub repo. You'll need to create a [Streamlit](https://streamlit.io/) account.
 
