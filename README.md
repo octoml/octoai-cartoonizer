@@ -37,9 +37,6 @@ In total this tutorial takes 30mins - 1 hour, depending on how much programming 
 
 #### Software :floppy_disk:
 * [OctoAI's compute service](https://docs.octoai.cloud/docs) with a user account.
-* The CLIP-Interrogator model container built in Phase 2 and uploaded on [Docker Hub](https://hub.docker.com/).
-* A Stable Diffusion model container that we built for you.
-* A test script to exercise your newly-launched OctoAI endpoint.
 
 ### Phase 3: Build your own Streamlit Web Frontend :technologist:
 
